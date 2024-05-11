@@ -35,6 +35,18 @@ class ContactController extends Controller
             });
         }
 
+        if ($request->filled('phone_number')) {
+            $query->whereHas('phones', function ($q) use ($request) {
+                $q->where('phone_number', 'like', '%' . $request->phone_number . '%');
+            });
+        }
+
+        if ($request->filled('city')) {
+            $query->whereHas('addresses', function ($q) use ($request) {
+                $q->where('city', 'like', '%' . $request->city . '%');
+            });
+        }
+
         $contacts = $query->paginate($pageSize);
 
         return response()->json($contacts);
