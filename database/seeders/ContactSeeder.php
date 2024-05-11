@@ -22,7 +22,7 @@ class ContactSeeder extends Seeder
             //PARA CADA CONTACTO, CREAMOS ALGUNOS DATOS ADICIONALES
             for ($j = 0; $j < rand(1, 3); $j++){
                 $contact->phones()->create([
-                    'phone_number' => fake()->phoneNumber(),
+                    'phone_number' => fake()->randomNumber(3, true).fake()->randomNumber(3, true).fake()->randomNumber(4, true),
                     'type' => fake()->randomElement(['home', 'work', 'mobile'])
                 ]);
 
