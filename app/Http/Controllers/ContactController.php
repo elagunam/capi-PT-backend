@@ -13,7 +13,10 @@ class ContactController extends Controller
      */
     public function index()
     {
-        //
+        $contacts = Contact::paginate(10);
+        // $users = User::paginate($request->input('per_page', 10));
+
+        return response()->json($contacts);
     }
 
     /**
