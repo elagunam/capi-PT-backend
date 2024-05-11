@@ -52,51 +52,19 @@ class ContactController extends Controller
         return response()->json($contacts);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreContactRequest $request)
-    {
-        //
-    }
+    public function getOneById(Request $request){
+        $id = $request->id;
+        $contacts = Contact::with('phones', 'addresses', 'emails')->where('id', $id)->get();
+        if(sizeof($contacts) < 1){
+            $response['status'] = false;
+            $response['message'] = 'No se encontró información del contacto especificado.';
+            return response()->json($response);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Contact $contact)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Contact $contact)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateContactRequest $request, Contact $contact)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Contact $contact)
-    {
-        //
+        $response['status'] = true;
+        $response['contact'] = $contacts[0];
+        $response['message'] = 'Se encontró información del contacto especificado.';
+        return response()->json($response);
     }
 }

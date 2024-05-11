@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('contacts')->controller(ContactController::class)->group(function(){
     Route::get('', 'index');
+    Route::get('{id}', 'getOneById');
 });
 
 
