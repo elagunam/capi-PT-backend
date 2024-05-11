@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('contact_id')->references('id')->on('contacts');
             $table->string('address', 150);
             $table->string('city', 50);
-            $table->string('country', 20);
+            $table->string('country', 100);
             $table->string('zip', 5);
             $table->timestamps();
             $table->boolean('deleted')->default(false);
