@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('contact_id');
             $table->foreign('contact_id')->references('id')->on('contacts');
-            $table->string('alias', 50)->nullable();
-            $table->string('street', 150);
-            $table->string('settlement', 50);
-            $table->string('municipality', 80);
-            $table->string('state', 50);
+            $table->string('address', 150);
+            $table->string('city', 50);
+            $table->string('country', 20);
+            $table->string('zip', 5);
             $table->timestamps();
             $table->boolean('deleted')->default(false);
             $table->timestamp('deleted_at')->nullable();

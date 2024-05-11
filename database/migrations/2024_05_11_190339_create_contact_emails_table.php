@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('contact_id');
             $table->foreign('contact_id')->references('id')->on('contacts');
-            $table->string('alias', 50)->nullable();
             $table->string('email', 100);
             $table->timestamps();
             $table->boolean('deleted')->default(false);
