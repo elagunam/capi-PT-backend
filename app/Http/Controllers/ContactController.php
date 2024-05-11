@@ -5,16 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
+use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::paginate(10);
-        // $users = User::paginate($request->input('per_page', 10));
+        $pageSize = 10;
+
+        if ($request->filled('pageSize')){
+            $pageSize = $request->pageSize;
+        }
+
+
+        $query = Contact::query();
+
+        if ($request->filled('fullname')) {
+            $query->where('fullname', 'like', '%' . $request->fullname . '%');
+        }
+
+        $contacts = $query->paginate($pageSize);
 
         return response()->json($contacts);
     }
