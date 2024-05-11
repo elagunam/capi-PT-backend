@@ -23,8 +23,16 @@ class ContactController extends Controller
 
         $query = Contact::query();
 
+        //SI INDICA EL FILTRO DE NOMBRE, BUSCAMOS POR NOMBRE
         if ($request->filled('fullname')) {
             $query->where('fullname', 'like', '%' . $request->fullname . '%');
+        }
+
+        //SI INDICA EL FILTRO DE EMAIL, BUSCAMOS CON EMAIL
+        if ($request->filled('email')) {
+            $query->whereHas('emails', function ($q) use ($request) {
+                $q->where('email', 'like', '%' . $request->email . '%');
+            });
         }
 
         $contacts = $query->paginate($pageSize);
