@@ -67,4 +67,44 @@ class ContactController extends Controller
         $response['message'] = 'Se encontró información del contacto especificado.';
         return response()->json($response);
     }
+
+    public function save(Request $request){
+        
+
+        if(!$request->filled(['fullname'])){
+            $response['status'] = false;
+            $response['message'] = 'Debe completar el formulario para guardar la informacíon';
+            return response()->json($response);
+        }
+
+        $fullname = $request->fullname;
+
+        
+        if($request->filled(['id'])){
+            $id = $request->id;
+            $contacts = Contact::with('phones', 'addresses', 'emails')->where('id', $id)->get();
+            if(sizeof($contacts) < 1){
+                $response['status'] = false;
+                $response['message'] = 'No se encontró información especifica';
+                return response()->json($response);
+            }
+            $contact = $contacts[0];
+        }else{
+            $contact = new Contact;
+        }
+
+        $contact->fullname = $fullname;
+
+        if(!$contact->save()){
+            $response['status'] = false;
+            $response['message'] = '¡Oops! Parece que algo salió mal';
+            return response()->json($response);
+        }
+        
+
+        $response['status'] = true;
+        $response['contact'] = $contact;
+        $response['message'] = 'Información guardada';
+        return response()->json($response);
+    }
 }
