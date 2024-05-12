@@ -6,6 +6,7 @@ use App\Http\Requests\StoreContactAddressRequest;
 use App\Http\Requests\UpdateContactAddressRequest;
 use App\Models\ContactAddress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ContactAddressController extends Controller
 {
@@ -82,6 +83,35 @@ class ContactAddressController extends Controller
         $response['status'] = true;
         $response['addresses'] = $addresesForContact;
         $response['message'] = 'Información guardada';
+        return response()->json($response);
+    }
+
+
+    public function delete(Request $request){
+        $id = $request->id;
+
+        
+        $addresses = ContactAddress::where('id', $id)->get();
+        if(sizeof($addresses) < 1){
+            $response['status'] = false;
+            $response['message'] = 'No se encontró información de la dirección indicada';
+            return response()->json($response);
+        }
+        $contactAddress = $addresses[0];
+
+        $contactAddress->deleted = 1;
+        $contactAddress->deleted_at = DB::raw('now()');
+
+        if(!$contactAddress->save()){
+            $response['status'] = false;
+            $response['message'] = '¡Oops! Parece que algo salió mal';
+            return response()->json($response);
+        }
+        $addresesForContact = $this->getAddressesForContactById($contactAddress->contact_id);
+        
+        $response['status'] = true;
+        $response['addresses'] = $addresesForContact;
+        $response['message'] = 'Dirección eliminada';
         return response()->json($response);
     }
 }

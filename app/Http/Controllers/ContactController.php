@@ -29,19 +29,19 @@ class ContactController extends Controller
         }
 
         //SI INDICA EL FILTRO DE EMAIL, BUSCAMOS CON EMAIL
-        if ($request->filled('email')) {
+        if ($request->filled('email')){
             $query->whereHas('emails', function ($q) use ($request) {
                 $q->where('email', 'like', '%' . $request->email . '%');
             });
         }
 
-        if ($request->filled('phone_number')) {
+        if ($request->filled('phone_number')){
             $query->whereHas('phones', function ($q) use ($request) {
                 $q->where('phone_number', 'like', '%' . $request->phone_number . '%');
             });
         }
 
-        if ($request->filled('city')) {
+        if ($request->filled('city')){
             $query->whereHas('addresses', function ($q) use ($request) {
                 $q->where('city', 'like', '%' . $request->city . '%');
             });

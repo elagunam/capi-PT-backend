@@ -13,16 +13,16 @@ class Contact extends Model
 
     public function phones()
     {
-        return $this->hasMany(ContactPhone::class);
+        return $this->hasMany(ContactPhone::class)->where('deleted', 0);
     }
 
     public function addresses()
     {
-        return $this->hasMany(ContactAddress::class);
+        return $this->hasMany(ContactAddress::class)->where('deleted', 0);
     }
 
     public function emails()
     {
-        return $this->hasMany(ContactEmail::class);
+        return $this->hasMany(ContactEmail::class)->where('deleted', 0);
     }
 }
