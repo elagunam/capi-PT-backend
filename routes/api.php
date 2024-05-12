@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactAddressController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -8,6 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('contacts')->controller(ContactController::class)->group(function(){
     Route::get('', 'index');
+    Route::get('{id}', 'getOneById');
+    Route::post('', 'save');
+});
+
+Route::prefix('address')->controller(ContactAddressController::class)->group(function(){
     Route::get('{id}', 'getOneById');
     Route::post('', 'save');
 });

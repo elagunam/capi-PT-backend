@@ -5,62 +5,83 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContactAddressRequest;
 use App\Http\Requests\UpdateContactAddressRequest;
 use App\Models\ContactAddress;
+use Illuminate\Http\Request;
 
 class ContactAddressController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+
+    private function getAddressesForContactById($contact_id){
+        $addresses = ContactAddress::where('contact_id', $contact_id)->where('deleted', 0)->get();
+        if(sizeof($addresses) < 1){
+            return [];
+        }
+        return $addresses;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function getOneById(Request $request){
+        $id = $request->id;
+        $addresses = ContactAddress::where('id', $id)->get();
+        if(sizeof($addresses) < 1){
+            $response['status'] = false;
+            $response['message'] = 'No se encontró información.';
+            return response()->json($response);
+        }
+
+        $response['status'] = true;
+        $response['address'] = $addresses[0];
+        $response['message'] = 'Se encontró información';
+        return response()->json($response);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreContactAddressRequest $request)
-    {
-        //
-    }
+    public function save(Request $request){
+        
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ContactAddress $contactAddress)
-    {
-        //
-    }
+        if(!$request->filled(['contact_id', 'address', 'city', 'country', 'zip'])){
+            $response['status'] = false;
+            $response['message'] = 'Debe completar el formulario para guardar la informacíon';
+            return response()->json($response);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ContactAddress $contactAddress)
-    {
-        //
-    }
+        $contact_id = $request->contact_id;
+        $address = $request->address;
+        $city = $request->city;
+        $country = $request->country;
+        $zip = $request->zip;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateContactAddressRequest $request, ContactAddress $contactAddress)
-    {
-        //
-    }
+        
+        if($request->filled(['id'])){
+            $id = $request->id;
+            $addresses = ContactAddress::where('id', $id)->where('contact_id', $contact_id)->get();
+            if(sizeof($addresses) < 1){
+                $response['status'] = false;
+                $response['message'] = 'No se encontró información especificada';
+                return response()->json($response);
+            }
+            $contactAddress = $addresses[0];
+        }else{
+            $contactAddress = new ContactAddress;
+            $contactAddress->contact_id = $contact_id;
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ContactAddress $contactAddress)
-    {
-        //
+        $contactAddress->address = $address;
+        $contactAddress->city = $city;
+        $contactAddress->country = $country;
+        $contactAddress->zip = $zip;
+
+        
+
+        if(!$contactAddress->save()){
+            $response['status'] = false;
+            $response['message'] = '¡Oops! Parece que algo salió mal';
+            return response()->json($response);
+        }
+
+        $addresesForContact = $this->getAddressesForContactById($contactAddress->contact_id);
+        
+
+        $response['status'] = true;
+        $response['addresses'] = $addresesForContact;
+        $response['message'] = 'Información guardada';
+        return response()->json($response);
     }
 }
