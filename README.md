@@ -1,4 +1,6 @@
 # Prueba técnica: BackEnd.
+Este proyecto fue realizado con Laravel 11 y PHP 8.2, utiliza eloquent para las consultas, además de algunas singularidades para el filtrado de información.
+
 ## Desarrollado con
     - PHP: 8.2
     - Laravel 11
