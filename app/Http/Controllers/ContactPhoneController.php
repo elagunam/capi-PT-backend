@@ -63,7 +63,7 @@ class ContactPhoneController extends Controller
             $contactPhone->contact_id = $contact_id;
         }
 
-        $contactPhone->address = $phone_number;
+        $contactPhone->phone_number = $phone_number;
         $contactPhone->type = $type;
 
         
