@@ -6,6 +6,7 @@ use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
@@ -22,6 +23,7 @@ class ContactController extends Controller
 
 
         $query = Contact::query();
+        $query->where('deleted', 0);
 
         //SI INDICA EL FILTRO DE NOMBRE, BUSCAMOS POR NOMBRE
         if ($request->filled('fullname')) {
@@ -105,6 +107,32 @@ class ContactController extends Controller
         $response['status'] = true;
         $response['contact'] = $contact;
         $response['message'] = 'Información guardada';
+        return response()->json($response);
+    }
+
+    public function delete(Request $request){
+        $id = $request->id;
+
+        
+        $contacts = Contact::where('id', $id)->get();
+        if(sizeof($contacts) < 1){
+            $response['status'] = false;
+            $response['message'] = 'No se encontró información';
+            return response()->json($response);
+        }
+        $contact = $contacts[0];
+
+        $contact->deleted = 1;
+        $contact->deleted_at = DB::raw('now()');
+
+        if(!$contact->save()){
+            $response['status'] = false;
+            $response['message'] = '¡Oops! Parece que algo salió mal';
+            return response()->json($response);
+        }
+        
+        $response['status'] = true;
+        $response['message'] = 'Contacto eliminado';
         return response()->json($response);
     }
 }

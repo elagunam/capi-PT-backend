@@ -12,6 +12,7 @@ Route::prefix('contacts')->controller(ContactController::class)->group(function(
     Route::get('', 'index');
     Route::get('{id}', 'getOneById');
     Route::post('', 'save');
+    Route::delete('{id}', 'delete');
 });
 
 Route::prefix('address')->controller(ContactAddressController::class)->group(function(){
